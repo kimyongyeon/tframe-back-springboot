@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <div class="card mt-3">
+        <div class="card-header">
+            Features
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">CRUD 테스트 </h5>
+            <p class="card-text">저장, 수정, 삭제, 읽기를 테스트 할 수 있다. </p>
+            <a href="#" class="btn btn-primary">메인으로</a>
+        </div>
+    </div>
+    <form action="">
+        <div class="form-group">
+            <label for="user">Name:</label>
+            <input type="text" class="form-control" id="user">
+        </div>
+        <div class="form-group">
+            <label for="local">local:</label>
+            <input type="text" class="form-control" id="local">
+        </div>
+        <div class="form-group">
+            <button id="btn-save">저장</button>
+            <button id="btn-delall">전체삭제</button>
+            <button id="btn-cancel">취소</button>
+        </div>
+    </form>
+
+    <script>
+
+        let index = 0;
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+        }
+
+        function userSave(user, local) {
+
+            index = getRandomInt(1,1000);
+
+            const param = {
+                idx: index,
+                name: user,
+                local: local
+            };
+
+            // table input
+            $.ajax({
+                method: "POST",
+                url: "/api/user",
+                dataType:"json",
+                contentType:"application/json; charset=UTF-8",
+                data: JSON.stringify(param),
+                success: function(data) {
+                    console.log('success: ' + JSON.stringify(data));
+                    userList();
+                }
+            });
+        }
+
+        function userList() {
+            // table list print
+            $.ajax({
+                method: "GET",
+                url: `/api/user`,
+                success: function(data) {
+                    console.log('success: ' + JSON.stringify(data));
+                    const list = data.msg;
+                    // table--list
+                    $("#table--list tbody").html('');
+                    let tableBody = "";
+                    for (let i=0; i<list.length; i++) {
+                        tableBody += `
+                             <tr>
+                                <th scope="row">${list[i].idx}</th>
+                                <td>${list[i].name}</td>
+                                <td>${list[i].local}</td>
+                            </tr>
+                        `
+                    }
+                    $("#table--list tbody").html(tableBody);
+                }
+            });
+        }
+
+        $("#btn-delall").on("click", function (e) {
+
+            $("#table--list tbody").html('');
+
+            $.ajax({
+                method: "DELETE",
+                url: "/api/user",
+                dataType:"json",
+                contentType:"application/json; charset=UTF-8",
+                data: '',
+                success: function(data) {
+                    console.log('success: ' + JSON.stringify(data));
+                    userList();
+                }
+            });
+        });
+
+        $("#btn-save").on("click", function (e) {
+            e.preventDefault();
+            console.log("save");
+            const user = $("#user").val();
+            const local = $("#local").val();
+            userSave(user, local);
+        });
+        $("#btn-cancel").on("click", function (e) {
+            alert("cancel");
+        });
+    </script>
+
+    <table class="table mt-3" id="table--list">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</th:block>
+
+</body>
+</html>

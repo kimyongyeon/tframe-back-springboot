@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false" scanPeriod="5 seconds">
+
+    <springProfile name="default,test">
+        <include resource="logback/logback-local.xml"/>
+        <!-- 개별 필요한 정의 -->
+        <logger name="com.skt" level="DEBUG" additivity="false">
+            <appender-ref ref="CONSOLE" />
+        </logger>
+    </springProfile>
+
+    <springProfile name="dev">
+        <include resource="logback/logback-dev.xml"/>
+    </springProfile>
+
+    <springProfile name="prd">
+        <include resource="logback/logback-prd.xml"/>
+    </springProfile>
+</configuration>

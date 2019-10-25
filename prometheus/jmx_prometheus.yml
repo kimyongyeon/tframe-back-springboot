@@ -1,0 +1,5 @@
+#local :  -javaagent:./prometheus/jmx_prometheus_javaagent-0.3.1.jar=9092:./prometheus/jmx_prometheus.yml
+#icp : -javaagent:/prometheus/jmx_prometheus_javaagent-0.3.1.jar=9092:/prometheus/jmx_prometheus.yml
+---
+lowercaseOutputName: false
+lowercaseOutputLabelNames: false

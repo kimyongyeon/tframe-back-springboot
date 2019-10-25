@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="card mt-3">
+        <div class="card-header">
+            Routing
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Routing 처리방법</h5>
+            <p class="card-text">Controller를 이용한 라우팅 처리에 대한 문서 입니다.</p>
+            <p class="card-text">Template Engine: thyemeleaf</p>
+            <p class="card-text">Laout Engine: tiles</p>
+            <p class="card-text">참고사이트: https://www.thymeleaf.org/documentation.html</p>
+        </div>
+    </div>
+    <p class="mt-3"> Controller 연결방법 </p>
+    <pre>
+    1. 화면 Redering은 return 값을 반드시 String 타입으로 던져야 Template Engine파일과 연결 됩니다.
+        예) a href=/link => link.html 파일을 templates 폴더에 생성해야 합니다.
+    2. Json return 타입은 RestController를 이용 합니다.
+    </pre>
+    <pre><code>
+    @GetMapping("/{path}")
+    public String onePath(@PathVariable String path, Model model) {
+        model.addAttribute("title", path + " title");
+        return path;
+    }
+    </code>
+    </pre>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skt.classic.web.template.mapper.UserMapper">
+
+    <update id="createUserTable">
+        CREATE TABLE USER (
+            IDX   NUMBER        PRIMARY KEY   NOT NULL,
+            NAME  VARCHAR(20)                 NOT NULL,
+            LOCAL VARCHAR(20)                 NOT NULL
+        )
+    </update>
+
+    <insert id="insert">
+        INSERT INTO USER VALUES (#{idx}, #{name}, #{local})
+    </insert>
+
+    <select id="findByIdx" resultType="User">
+        SELECT * FROM USER WHERE IDX = #{idx}
+    </select>
+
+    <select id="findAll" resultType="User">
+        SELECT * FROM USER limit 0, 100
+    </select>
+
+    <select id="findWithPagination" resultType="User">
+        SELECT * FROM USER
+    </select>
+
+    <select id="deleteAll" resultType="User">
+        DELETE FROM USER
+    </select>
+
+    <delete id="deleteByIdx">
+        DELETE FROM USER WHERE IDX = #{idx}
+    </delete>
+
+    <update id="setFixedNameByIdx">
+        UPDATE USER SET NAME = #{name} WHERE IDX = #{idx}
+    </update>
+</mapper>

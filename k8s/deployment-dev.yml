@@ -1,0 +1,98 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: classic-web-0.0.1
+  labels:
+    app: classic-web
+    version: 0.0.1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: classic-web
+      version: 0.0.1
+  template:
+    metadata:
+      labels:
+        app: classic-web
+        version: 0.0.1
+    spec:
+      containers:
+        - name: classic-web
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: APP_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['version']
+
+            # jasypt key
+            - name: JASYPT_ENCRYPTOR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: encsecret
+                  key: jasyptEnc
+            # //jasypt key
+
+            # whatap License
+            - name: license
+              value: x210grlgdo47m-z57a6guvm4eka1-z2d81dphb0ikm6
+          # //whatap Lisence
+          image: mtwd.icp.skt.com:8500/mtw-dev/classic-web:0.0.1-SNAPSHOT # 변경  : melonicecream/mtw:boilerplate.0.1  --> mtwd.icp.skt.com:8500/mtw-tmp/boilerplate:0.2.0
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+          ## probe
+          livenessProbe:
+            httpGet:
+              path: /actuator/info
+              port: 8080
+            failureThreshold: 10
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/info
+              port: 8080
+            failureThreshold: 10
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 15
+          ## //probe
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1792Mi"
+            limits:
+              cpu: "2000m"
+              memory: "3584Mi"
+          volumeMounts:
+            - mountPath: /applog
+              name: pod-log-volume
+            - mountPath: /whatap
+              name: apm-agent-volume
+            - mountPath: /gclog
+              name: dump-volume
+      volumes:
+        - name: pod-log-volume
+          hostPath:
+            path: /applog
+        - name: apm-agent-volume
+          hostPath:
+            path: /whatap
+        - name: dump-volume
+          persistentVolumeClaim:
+            claimName: dump-pvc
+      terminationGracePeriodSeconds: 60

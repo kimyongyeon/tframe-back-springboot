@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="card mt-3">
+        <div class="card-header">
+            Authorization
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Authorization 관리</h5>
+            <p class="card-text">인가 처리에 대한 문서 입니다.</p>
+        </div>
+    </div>
+    <p class="mt-3"> 인가처리에 대한 부분은 아래 샘플을 참고 바랍니다. </p>
+    <pre><code>
+        // 스프링 시큐리티가 포함된 상태이고 현재는 사용안함 상태이고,
+        // 사용을 원하면 Main 클래스에서 아래 내용을 지우면 된다.
+        // ClassicWebTemplateApplication.java
+        @SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+
+        // WebSecurityConfiguration.java
+        // Configuration도 이미 들어가 있는 상태 이다.
+        @Configuration
+        @EnableWebSecurity
+        public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+            @Override
+            protected void configure(HttpSecurity http) throws Exception {
+                setLocalMode(http);
+            }
+
+            private void setLocalMode(HttpSecurity http) throws Exception {
+                http.antMatcher("/**")
+                        .authorizeRequests()
+                        .antMatchers("/", "/me", "/h2-console/**", "/login/**"
+                        , "/js/**", "/css/**", "/image/**", "/fonts/**", "/favicon.ico").permitAll()
+                        .and().headers().frameOptions().sameOrigin()
+                        .and().csrf().disable()
+                ;
+            }
+
+        }
+
+        // application.properties
+        spring.security.user.name=user # Default user name.
+        spring.security.user.password=1234 # Password for the default user name.
+        spring.security.user.roles= # Granted roles for the default user name.
+    </code></pre>
+</th:block>
+
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="card mt-3">
+        <div class="card-header">
+            Log Handling
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">로그 사용방법</h5>
+            <p class="card-text">로그 사용법에 대한 문서 입니다.</p>
+            <p class="card-text">ActiveProfile에 따라서 log 레벨이 조정 됩니다.</p>
+            <p class="card-text">ActiveProfile 종류: local, dev, prd </p>
+            <p class="card-text">log pattern 수정이 필요할시 reources/logback/logback-base.xml을 수정하세요. </p>
+            <p class="card-text">로그레벨: ERROR < WARN < INFO < DEBUG < TRACE</p>
+        </div>
+    </div>
+    <p class="mt-3">logback 사용방법</p>
+    <pre><code>
+        logger.trace("Hello world.");
+        logger.debug("Hello world."); //debug level로 해당 메시지의 로그를 찍겠다.
+        logger.info("Hello world.");
+        logger.warn("Hello world.");
+        logger.error("Hello world.");
+    </code></pre>
+
+</th:block>
+
+</body>
+</html>

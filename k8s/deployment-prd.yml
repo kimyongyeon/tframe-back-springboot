@@ -1,0 +1,95 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: classic-web-1.8
+  labels:
+    app: classic-web
+    version: '1.8'
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: classic-web
+      version: '1.8'
+  template:
+    metadata:
+      labels:
+        app: classic-web
+        version: '1.8'
+    spec:
+      containers:
+        - name: classic-web
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prd
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: APP_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['version']
+            - name: JASYPT_ENCRYPTOR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: encsecret
+                  key: jasyptEnc
+            - name: license
+              value: x270gianms79t-x6bopmqrme1s13-x5qnn705qfn1a8
+          image: mtwp.icp.skt.com:8500/mtw-prd/classic-web:1.8.0
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /actuator/info
+              port: 8080
+            failureThreshold: 10
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/info
+              port: 8080
+            failureThreshold: 10
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 15
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 3584Mi
+            limits:
+              cpu: 2000m
+              memory: 3584Mi
+          volumeMounts:
+            - mountPath: /applog
+              name: pod-log-volume
+            - mountPath: /whatap
+              name: apm-agent-volume
+            - mountPath: /gclog
+              name: dump-volume
+      volumes:
+        - name: pod-log-volume
+          hostPath:
+            path: /applog
+        - name: apm-agent-volume
+          hostPath:
+            path: /whatap
+        - name: dump-volume
+          persistentVolumeClaim:
+            claimName: dump-pvc
+      terminationGracePeriodSeconds: 60

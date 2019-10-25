@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="card mt-3">
+        <div class="card-header">
+            Exception Handling
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Exception 관리</h5>
+            <p class="card-text">Exception Handling 관리에 대한 문서 입니다.</p>
+        </div>
+    </div>
+    <p class="mt-3">강제로 Rollback이 필요할 경우는 아래와 같이 BusinessException을 발생하면 됩니다.</p>
+    <pre><code>
+        // 사용예시
+        throw new BusinessException("ERR01", "ROLLBACK");
+
+        // 구현체
+        // stacktrace을 받는 경우
+        public BusinessException(Throwable throwable) {
+            super(throwable);
+        }
+
+        // 코드, stacktrace을 받는 경우
+        public BusinessException(String code, Throwable throwable) {
+            super(code, throwable);
+        }
+
+        // 코드, 정의된 메시지를 받는 경우
+        public BusinessException(String code, String msg) {
+            super(code, msg);
+        }
+
+    </code></pre>
+
+</th:block>
+
+</body>
+</html>

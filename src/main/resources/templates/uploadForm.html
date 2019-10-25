@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <title th:text="${title}"></title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div class="card mt-3">
+        <div class="card-header">
+            UploadForm
+        </div>
+        <div th:if="${message}">
+            <h2 th:text="${message}"/>
+        </div>
+
+        <div class="mt-3">
+            <form method="POST" enctype="multipart/form-data" action="/fileUpload">
+                <table>
+                    <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+                    <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+                </table>
+            </form>
+        </div>
+
+        <div class="mt-2">
+            <ul>
+                <li th:each="file : ${files}">
+                    <a th:href="${file}" th:text="${file}" />
+                </li>
+            </ul>
+        </div>
+    </div>
+    <p class="mt-3">Html Sample 코드는 아래를 참고 바랍니다.</p>
+    <pre><code>
+    &lt;form method="POST" enctype="multipart/form-data" action="/fileUpload">
+        &lt;table>
+            &lt;tr>&lt;td>File to upload:&lt;/td>&lt;td>&lt;input type="file" name="file" />&lt;/td>&lt;/tr>
+            &lt;tr>&lt;td>&lt;/td>&lt;td>&lt;input type="submit" value="Upload" />&lt;/td>&lt;/tr>
+        &lt;/table>
+    &lt;/form>
+    
+     &lt;div>
+        &lt;ul>
+            &lt;li th:each="file : ${files}">
+                &lt;a th:href="${file}" th:text="${file}" />
+            &lt;/li>
+        &lt;/ul>
+    &lt;/div>    
+    </code>
+    </pre>
+
+</th:block>
+
+</body>
+</html>
+

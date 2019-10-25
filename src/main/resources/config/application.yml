@@ -1,0 +1,57 @@
+server:
+  tomcat:
+    accesslog:
+      pattern: ACC|%a "%{X-Forwarded-For}i" %l %u %t %s_code %B_bytes %D_usecs "%r" "%{Referer}i" "%{User-Agent}i"
+      directory: /proc/self/fd
+      prefix: 1
+      suffix: ""
+      file-date-format: ""
+      enabled: true
+    basedir: .
+
+#계정 정보 암/복호화 설정
+jasypt:
+  encryptor:
+    #password: 3HxrhqzLd+XLWj527jmSTJ1R590tVJ4jhZws1lpeoi+hIZmgGhup1SY4BBXhbW7+ # EncryptUtil.aesEncodeBase64를 사용하는 경우 password를
+    password: 0835dc6d-a4fd-4efb-927d-651fd5eaddbb
+    algorithm: PBEWithMD5AndTripleDES
+    keyObtentionIterations: 1000
+    poolSize: 1
+
+skt:
+  multi-datasource:
+    datasource2:
+      #      initialize: false
+      initializationMode: NEVER
+      type: org.apache.commons.dbcp2.BasicDataSource
+      dbcp2:
+        default-auto-commit: true
+        driver-class-name: org.h2.Driver
+        test-on-borrow: true
+        username: sa
+        password:
+        initial-size: 5
+        default-query-timeout: 60000
+        url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1
+        max-idle: 20
+        max-total: 20
+        validation-query: select 1
+        max-wait-millis: 30000
+        max-open-prepared-statements: 20
+spring:
+  h2:
+    console:
+      enabled: true  # H2 웹 콘솔을 사용하겠다는 의미
+      path: /test_db  # 콘솔의 경로
+  devtools:
+    livereload:
+      enabled: true
+  thymeleaf:
+    cache: false
+
+#  datasource:
+#    driver-class-name: org.h2.Driver  #h2 드라이버 설정
+#    url: jdbc:h2:mem:testdb   #접속 URL
+#    username: sa  # 사용자 이름 (로그인 시 사용)
+#    password:   # 사용자 암호 (로그인 시 사용)
+
